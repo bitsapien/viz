@@ -1,0 +1,160 @@
+<!doctype html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="googlebot" content="noindex, nofollow">
+  <script type="text/javascript" src="https://unpkg.com/vue@latest/dist/vue.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/vuefire@1.3.0"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/firebasejs/3.4.0/firebase.js"></script>
+
+  <style type="text/css">
+    body {
+      font-family: Helvetica, Arial, sans-serif;
+    }
+
+    ul {
+      padding: 0;
+    }
+
+    .user {
+      height: 30px;
+      line-height: 30px;
+      padding: 10px;
+      border-top: 1px solid #eee;
+      overflow: hidden;
+      transition: all .25s ease;
+    }
+
+    .user:last-child {
+      border-bottom: 1px solid #eee;
+    }
+
+    .v-enter, .v-leave-active {
+      height: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+      border-top-width: 0;
+      border-bottom-width: 0;
+    }
+
+    .errors {
+      color: #f00;
+    }
+
+ </style>
+
+<title> by chrisvfritz</title>
+
+<script type="text/javascript">//<![CDATA[
+window.onload=function(){
+var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
+// Setup Firebase
+var config = {
+  apiKey: "AIzaSyBV3hN8yECFq0y_awa4_UdddnuFaNNsKcg",
+  authDomain: "viz-persist.firebaseapp.com",
+  databaseURL: "https://viz-persist.firebaseio.com"
+}
+firebase.initializeApp(config)
+
+var usersRef      = firebase.database().ref('users')
+// var interestsRef  = firebase.database().ref('interests')
+// var groupsRef     = firebase.database().ref('groups')
+
+// create Vue app
+var app = new Vue({
+  // element to mount to
+  el: '#app',
+  // initial data
+  data: {
+    newUser: {
+      name: ''
+    }
+    // newInterest: {
+    //   name: ''
+    // },
+    // newGroup: {
+    //   name: ''
+    // }
+  },
+  // firebase binding
+  // https://github.com/vuejs/vuefire
+  firebase: {
+    users: usersRef
+  },
+  // computed property for form validation state
+  computed: {
+    validation: function () {
+      return {
+        name: !!this.newUser.name.trim()
+      }
+    },
+    isValid: function () {
+      var validation = this.validation
+      return Object.keys(validation).every(function (key) {
+        return validation[key]
+      })
+    }
+  },
+  // methods
+  methods: {
+    addUser: function () {
+      if (this.isValid) {
+        usersRef.push(this.newUser)
+        this.newUser.name = ''
+      }
+    },
+    removeUser: function (user) {
+      usersRef.child(user['.key']).remove()
+    }
+    // addInterest: function() {
+    //   if(this.isValid) {
+    //     interestsRef.push(this.newInterest)
+    //     this.newInterest.name = ''
+    //   }
+    // },
+    // removeInterest: function (interest) {
+    //   interestsRef.child(interest['.key']).remove()
+    // },  
+  //   addGroups: function() {
+  //     if(this.isValid) {
+  //       groupsRef.push(this.newGroup)
+  //       this.newGroup.name = ''
+  //     }
+  //   },
+  //   removegroup: function (group) {
+  //     groupsRef.child(Group['.key']).remove()
+  //   }  
+  }
+})
+
+}//]]> 
+
+</script>
+
+  
+</head>
+<body>
+<div id="app">
+  <h3>Users </h3>
+  <ul is="transition-group">
+    <li v-for="user in users" class="user" :key="user['.key']">
+      <span>{{user.name}}</span>
+      <button v-on:click="removeUser(user)">X</button>
+    </li>
+  </ul>
+
+  <form id="form" v-on:submit.prevent="addUser">
+    <input type="text" v-model="newUser.name" placeholder="Username">
+    <input type="submit" value="Add User">
+  </form>
+  <ul class="errors">
+    <li v-show="!validation.name">Name cannot be empty.</li>
+  </ul>
+
+
+
+
+</div>
+</body>
+</html>
