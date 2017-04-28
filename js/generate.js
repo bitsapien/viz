@@ -610,9 +610,12 @@ var draw_table = function(){
 
           user_names = [];
           for(var k = 0; k < user_ids.length; k++) {
+            console.log(users)
             user = users.filter(function(u){
               return u.id == user_ids[k] 
             })[0];
+            console.log(user_ids[k])
+            console.log(user)
             user_names.push(user.name);
           }
           $('#groups table tbody').append('<tr><td>'+groups[i].id+'</td><td>'+groups[i].name+'</td><td>'+user_names+'</td></tr>');

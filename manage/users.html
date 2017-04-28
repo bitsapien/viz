@@ -1,0 +1,155 @@
+
+<!doctype html>
+<html>
+<head>
+  <title>Viz | Sahil </title>
+
+  <style type="text/css">
+    html, body {
+      font: 10pt arial;
+    }
+    #graph_options {
+      position: fixed;
+      z-index: 9999;
+      top: 1rem;
+      left: 1rem;
+    }
+    #graph_options a {
+      line-height: 1.5rem;
+      font-size: 1rem;
+      padding: 10px 10px 6px 10px;
+      background: #5f3d00;
+      text-decoration: none;
+      color: #fff;
+    }
+    #graph_options a.active {
+      background: #385380;
+    }
+    #group_likes {
+      width: 50%;
+      height: 100%;
+      border: 1px solid lightgray;
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+    #logo {
+      position: fixed;
+      top: 0;
+      left: 50%;   
+      height: 20%;
+    }
+    #logo img{
+      max-width:100%;
+      max-height:100%;
+    }
+    #data {
+      width: 100%;
+      height: 90%;
+      border: 1px solid lightgray;
+      position: fixed;
+      top: 25%; 
+      overflow-y: scroll;  
+    }
+    #data table{
+      margin-top: 0.2rem;
+      width: 100%;
+      border-collapse: collapse;
+      table-layout:fixed;
+      z-index: 99;
+
+    }
+    #data-table {
+    	margin-top: 3em;
+    }
+    .dataset table thead {
+      font-weight: bold;
+      background: #385380;
+      color: #fff;
+      width: 100%;
+    }
+    .dataset table tbody {
+      margin-top: 0.1rem;
+    }
+    .dataset table tbody tr td{
+      padding: 5px;
+      border-top: 1px #ccc solid;
+      word-wrap: break-word;
+    }
+    #options {
+      background: #fff;
+      width: 100%;
+    }
+    #options a {
+      line-height: 1.5rem;
+      font-size: 1rem;
+      padding: 10px 10px 6px 10px;
+      background: #5f3d00;
+      text-decoration: none;
+      color: #fff;
+    }
+    #options a:hover {
+      background: #ddd;
+    }
+    #options a.active {
+      background: #385380;
+    }
+    .dataset {
+      margin-top: 0.25rem;
+    }
+
+  </style>
+
+  <script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
+  <script src="https://www.gstatic.com/firebasejs/3.9.0/firebase.js"></script>
+  <script type="text/javascript" src="../js/fetch.js"></script>
+  <script type="text/javascript">
+  	var draw_users = function(){
+  		for(var i=0;i<users.length;i++){
+  			$('#data table').append('<tr><td>'+users[i].id+'</td><td>'+users[i].name+'</td><td><a href="#" style="padding: 2px;" onclick="delete_resource('+users[i].id+')">x</a></td></tr>');
+
+  		}
+  	};
+
+  	var delete_resource = function(id){
+  		firebase.database().ref('/users/' + id).remove();
+  		refresh_data();
+  		draw_users();
+  	};
+  </script>
+  
+</head>
+<body>
+<div id="graph_options">
+  <a href="../manage/groups.html">Groups</a>
+  <a href="../manage/users.html" style="background-color: #385380">Users</a>
+  <a href="../manage/likes.html">Likes</a>
+  <br/>
+  <br/>
+  <a href="#" onclick="draw_users()" style="background-color: #000">Refresh</a>
+  <br/>
+  <br/>
+  <form id="add">
+  	<input type="text" id="name" placeholder="name">
+  	<input type="submit" value="add">
+  </form>
+
+</div>
+<div id="data">
+	<table>
+		<thead style="background-color: #385380;color: #FFF;">
+			<td>ID</td>
+			<td>Name</td>
+			<td>Delete</td>
+		</thead>
+		<tbody>
+			
+		</tbody>
+	</table>
+</div>
+
+</body>
+</html>

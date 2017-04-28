@@ -17,14 +17,23 @@ function fetch_resource(name){
   database.ref(name+'/').orderByChild('id').once('value').then(function(snapshot) {
     s = snapshot.val();
     for(var i=1;i<s.length;i++){
-      u.push(s[i]);
+    	if(s[i]){
+      		u.push(s[i]);
+    	}
   }
   });
   return u;
 }
+var	users       = fetch_resource('users');
+var	groups      = fetch_resource('groups');
+var	likes       = fetch_resource('likes');
+var	user_likes  = fetch_resource('user_likes');
+var	user_groups = fetch_resource('user_groups');
 
-var users       = fetch_resource('users');
-var groups      = fetch_resource('groups');
-var likes       = fetch_resource('likes');
-var user_likes  = fetch_resource('user_likes');
-var user_groups = fetch_resource('user_groups');
+var refresh_data = function(){
+	users       = fetch_resource('users');
+	groups      = fetch_resource('groups');
+	likes       = fetch_resource('likes');
+	user_likes  = fetch_resource('user_likes');
+	user_groups = fetch_resource('user_groups');
+}
